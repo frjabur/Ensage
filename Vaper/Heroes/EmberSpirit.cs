@@ -89,16 +89,7 @@ namespace Vaper.Heroes
 
             var factory = this.Menu.Hero.Factory;
 
-            this.Ensage.Renderer.Draw += this.OnDraw;
-            Entity.OnInt32PropertyChange += this.OnNetworkActivity;
-        }
 
-        protected override void OnDeactivate()
-        {
-            Entity.OnInt32PropertyChange -= this.OnNetworkActivity;
-            this.Ensage.Renderer.Draw -= this.OnDraw;
-
-            base.OnDeactivate();
         }
 
         protected override async Task OnKillsteal(CancellationToken token)
