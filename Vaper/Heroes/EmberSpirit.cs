@@ -134,5 +134,5 @@ namespace Vaper.Heroes
 
             await Task.Delay(125, token);
         }
-
+    }
 }
