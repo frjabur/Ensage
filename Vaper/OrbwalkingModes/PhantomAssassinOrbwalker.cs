@@ -1,4 +1,4 @@
-// <copyright file="PhantomAssassinOrbwalker.cs" company="Ensage">
+// <copyright file="EmberSpiritOrbwalker.cs" company="Ensage">
 //    Copyright (c) 2017 Ensage.
 // </copyright>
 
@@ -12,11 +12,11 @@ namespace Vaper.OrbwalkingModes
 
     using Vaper.Heroes;
 
-    public class PhantomAssassinOrbwalker : VaperOrbwalkingMode
+    public class EmberSpiritOrbwalker : VaperOrbwalkingMode
     {
-        private readonly PhantomAssassin hero;
+        private readonly EmberSpirit hero;
 
-        public PhantomAssassinOrbwalker(PhantomAssassin hero)
+        public EmberSpiritOrbwalker(EmberSpirit hero)
             : base(hero)
         {
             this.hero = hero;
@@ -41,18 +41,18 @@ namespace Vaper.OrbwalkingModes
                 return;
             }
 
-            var dagger = this.hero.Dagger;
-            if (dagger.CanBeCasted && dagger.CanHit(target))
+            var fist = this.hero.Fist;
+            if (fist.CanBeCasted && fist.CanHit(target))
             {
-                dagger.UseAbility(target);
-                await Task.Delay(dagger.GetCastDelay(target), token);
+                fist.UseAbility(target);
+                await Task.Delay(fist.GetCastDelay(target), token);
             }
 
-            var blink = this.hero.PhantomStrike;
-            if (blink.CanBeCasted && blink.CanHit(target))
+            var chains = this.hero.Chains;
+            if (chains.CanBeCasted && chains.CanHit(target))
             {
-                blink.UseAbility(target);
-                await Task.Delay(blink.GetCastDelay(target), token);
+                chains.UseAbility(target);
+                await Task.Delay(chains.GetCastDelay(target), token);
             }
 
             if (!target.IsStunned())
