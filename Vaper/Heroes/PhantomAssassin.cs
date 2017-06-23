@@ -148,9 +148,9 @@ namespace Vaper.Heroes
             base.OnUpdateParticles();
         }
 
-        private void BlurIndicatorPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void RemnantCountdownPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (!this.BlurIndicator)
+            if (!this.RemnantCountdown)
             {
                 this.Ensage.Particle.Remove("vaper_blurIndicator");
             }
