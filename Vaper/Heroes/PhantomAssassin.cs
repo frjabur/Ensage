@@ -156,6 +156,6 @@ namespace Vaper.Heroes
             }
         }
 
-        }
     }
 }
+
