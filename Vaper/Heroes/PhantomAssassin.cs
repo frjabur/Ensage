@@ -34,7 +34,7 @@ namespace Vaper.Heroes
 
         public MenuItem<bool> RemnantCountdown { get; private set; }
 
-        public ember_spirit_fire_remnant ActivateRemnant { get; private set; }
+        public ember_spirit_fire_remnant ActivateFireRemnant { get; private set; }
 
         public ember_spirit_flame_guard FlameGuard { get; private set; }
         
@@ -82,7 +82,7 @@ namespace Vaper.Heroes
             this.Fist = this.Ensage.AbilityFactory.GetAbility<ember_spirit_sleight_of_fist>();
             this.Chains = this.Ensage.AbilityFactory.GetAbility<ember_spirit_searing_chains>();
             this.Remnant = this.Ensage.AbilityFactory.GetAbility<ember_spirit_fire_remnant>();
-            this.ActivateRemnant = this.Ensage.AbilityFactory.GetAbility<ember_spirit_activate_fire_remnant>();
+            this.ActivateFireRemnant = this.Ensage.AbilityFactory.GetAbility<ember_spirit_activate_fire_remnant>();
             this.FlameGuard = this.Ensage.AbilityFactory.GetAbility<ember_spirit_flame_guard>();
 
             this.AbyssalBlade = this.Ensage.AbilityFactory.GetItem<item_abyssal_blade>();
