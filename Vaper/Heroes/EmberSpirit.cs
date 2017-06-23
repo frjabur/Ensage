@@ -41,10 +41,6 @@ namespace Vaper.Heroes
         public ember_spirit_sleight_of_fist Fist { get; private set; }
 
         public ember_spirit_searing_chains Chains { get; private set; }
-        
-        public float CurrentCountdown { get; private set; }
-        
-        public float CountPrd { get; private set; } // 0.03221f; // = 15%
 
         protected override VaperOrbwalkingMode GetOrbwalkingMode()
         {
@@ -92,8 +88,6 @@ namespace Vaper.Heroes
             this.AbyssalBlade = this.Ensage.AbilityFactory.GetItem<item_abyssal_blade>();
 
             var factory = this.Menu.Hero.Factory;
-            this.RemnantCountdown = factory.Item("Show Remnant Countdown", true);
-            this.RemnantCountdown.PropertyChanged += this.RemnantCountdownPropertyChanged;
 
             this.Ensage.Renderer.Draw += this.OnDraw;
             Entity.OnInt32PropertyChange += this.OnNetworkActivity;
