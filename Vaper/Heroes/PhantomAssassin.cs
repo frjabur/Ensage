@@ -1,4 +1,4 @@
-﻿// <copyright file="PhantomAssassin.cs" company="Ensage">
+﻿// <copyright file="EmberSpirit.cs" company="Ensage">
 //    Copyright (c) 2017 Ensage.
 // </copyright>
 
@@ -14,7 +14,7 @@ namespace Vaper.Heroes
     using Ensage;
     using Ensage.Common.Extensions;
     using Ensage.SDK.Abilities.Items;
-    using Ensage.SDK.Abilities.npc_dota_hero_phantom_assassin;
+    using Ensage.SDK.Abilities.npc_dota_hero_ember_spirit;
     using Ensage.SDK.Helpers;
     using Ensage.SDK.Inventory;
     using Ensage.SDK.Menu;
@@ -25,26 +25,22 @@ namespace Vaper.Heroes
 
     using Color = System.Drawing.Color;
 
-    [ExportHero(HeroId.npc_dota_hero_phantom_assassin)]
-    public class PhantomAssassin : BaseHero
+    [ExportHero(HeroId.npc_dota_hero_ember_spirit)]
+    public class EmberSpirit : BaseHero
     {
-        public const float CritPrd = 0.03221f; // = 15%
-
         public item_abyssal_blade AbyssalBlade { get; private set; }
 
-        public phantom_assassin_blur Blur { get; private set; }
+        public ember_spirit_activate_fire_remnant Remnant { get; private set; }
 
-        public MenuItem<bool> BlurIndicator { get; private set; }
+        public MenuItem<bool> RemnantCountdown { get; private set; }
 
-        public phantom_assassin_coup_de_grace Crit { get; private set; }
+        public ember_spirit_fire_remnant ActivateRemnant { get; private set; }
 
-        public MenuItem<bool> CritIndicator { get; private set; }
+        public ember_spirit_flame_guard FlameGuard { get; private set; }
+        
+        public ember_spirit_sleight_of_fist Fist { get; private set; }
 
-        public float CurrentCritChance { get; private set; }
-
-        public phantom_assassin_stifling_dagger Dagger { get; private set; }
-
-        public phantom_assassin_phantom_strike PhantomStrike { get; private set; }
+        public ember_spirit_searing_chains Chains { get; private set; }
 
         protected override VaperOrbwalkingMode GetOrbwalkingMode()
         {
@@ -83,17 +79,17 @@ namespace Vaper.Heroes
         {
             base.OnActivate();
 
-            this.Dagger = this.Ensage.AbilityFactory.GetAbility<phantom_assassin_stifling_dagger>();
-            this.PhantomStrike = this.Ensage.AbilityFactory.GetAbility<phantom_assassin_phantom_strike>();
-            this.Blur = this.Ensage.AbilityFactory.GetAbility<phantom_assassin_blur>();
-            this.Crit = this.Ensage.AbilityFactory.GetAbility<phantom_assassin_coup_de_grace>();
+            this.Fist = this.Ensage.AbilityFactory.GetAbility<ember_spirit_sleight_of_fist>();
+            this.Chains = this.Ensage.AbilityFactory.GetAbility<ember_spirit_searing_chains>();
+            this.Remnant = this.Ensage.AbilityFactory.GetAbility<ember_spirit_fire_remnant>();
+            this.ActivateRemnant = this.Ensage.AbilityFactory.GetAbility<ember_spirit_activate_fire_remnant>();
+            this.FlameGuard = this.Ensage.AbilityFactory.GetAbility<ember_spirit_flame_guard>();
 
             this.AbyssalBlade = this.Ensage.AbilityFactory.GetItem<item_abyssal_blade>();
 
             var factory = this.Menu.Hero.Factory;
-            this.CritIndicator = factory.Item("Show Crit Indicator", true);
-            this.BlurIndicator = factory.Item("Show Blur Indicator", true);
-            this.BlurIndicator.PropertyChanged += this.BlurIndicatorPropertyChanged;
+            this.RemnantCountdown = factory.Item("Show Remnant Countdown", true);
+            this.RemnantCountdown.PropertyChanged += this.RemnantCountdownPropertyChanged;
 
             this.Ensage.Renderer.Draw += this.OnDraw;
             Entity.OnInt32PropertyChange += this.OnNetworkActivity;
@@ -109,7 +105,7 @@ namespace Vaper.Heroes
 
         protected override async Task OnKillsteal(CancellationToken token)
         {
-            if (!this.Owner.IsAlive || !this.Dagger.CanBeCasted)
+            if (!this.Owner.IsAlive || !this.Fist.CanBeCasted)
             {
                 await Task.Delay(125, token);
                 return;
@@ -119,15 +115,15 @@ namespace Vaper.Heroes
                 x => x.IsAlive
                      && x.Team != this.Owner.Team
                      && !x.IsIllusion
-                     && this.Dagger.CanHit(x)
-                     && !x.IsLinkensProtected()
-                     && this.Dagger.GetDamage(x) > x.Health);
+                     && this.Fist.CanHit(x)
+
+                     && this.Fist.GetDamage(x) > x.Health);
 
             if (killstealTarget != null)
             {
-                if (this.Dagger.UseAbility(killstealTarget))
+                if (this.Fist.UseAbility(killstealTarget))
                 {
-                    var castDelay = this.Dagger.GetCastDelay(killstealTarget);
+                    var castDelay = this.Fist.GetCastDelay(killstealTarget);
                     await this.AwaitKillstealDelay(castDelay, token);
                 }
             }
@@ -137,9 +133,9 @@ namespace Vaper.Heroes
 
         protected override void OnUpdateParticles()
         {
-            if (this.BlurIndicator)
+            if (this.RemnantCountdown)
             {
-                if (!this.Owner.HasModifier(this.Blur.ModifierName))
+                if (!this.Owner.HasModifier(this.Remnant.ModifierName))
                 {
                     this.Ensage.Particle.AddOrUpdate(this.Owner, "vaper_blurIndicator", @"particles/dire_fx/tower_bad_lamp_f.vpcf", ParticleAttachment.AbsOriginFollow);
                 }
