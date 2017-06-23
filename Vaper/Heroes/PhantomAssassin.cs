@@ -44,7 +44,7 @@ namespace Vaper.Heroes
 
         protected override VaperOrbwalkingMode GetOrbwalkingMode()
         {
-            return new PhantomAssassinOrbwalker(this);
+            return new EmberSpiritOrbwalker(this);
         }
 
         protected override void InventoryChanged(object sender, NotifyCollectionChangedEventArgs e)
