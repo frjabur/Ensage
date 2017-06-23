@@ -41,6 +41,10 @@ namespace Vaper.Heroes
         public ember_spirit_sleight_of_fist Fist { get; private set; }
 
         public ember_spirit_searing_chains Chains { get; private set; }
+        
+        public float CurrentCountdown { get; private set; }
+        
+        public float CountPrd { get; private set; } // 0.03221f; // = 15%
 
         protected override VaperOrbwalkingMode GetOrbwalkingMode()
         {
@@ -156,21 +160,21 @@ namespace Vaper.Heroes
             }
         }
 
-        private void CritIndicatorPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void RemnantCountdownPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (this.CritIndicator)
+            if (this.RemnantCountdown)
             {
-                this.Ensage.Renderer.Draw += this.OnDraw;
+                this.Ensage.Renderer.Draw -= this.OnDraw;
             }
             else
             {
-                this.Ensage.Renderer.Draw -= this.OnDraw;
+                this.Ensage.Renderer.Draw += this.OnDraw;
             }
         }
 
         private void OnDraw(object sender, EventArgs e)
         {
-            if (!this.CritIndicator || this.Crit.Ability.Level <= 0)
+            if (!this.RemnantCountdown || this.ActivateFireRemnant.Ability.Level <= 0)
             {
                 return;
             }
@@ -181,14 +185,14 @@ namespace Vaper.Heroes
             {
                 this.Ensage.Renderer.DrawRectangle(new RectangleF(screenPos.X - 40, screenPos.Y - 15, 80, 7), Color.Red);
 
-                var critWidth = 80.0f * this.CurrentCritChance;
+                var critWidth = 80.0f * this.CurrentCountdown;
                 this.Ensage.Renderer.DrawLine(new Vector2(screenPos.X - 40, screenPos.Y - 11), new Vector2((screenPos.X - 40) + critWidth, screenPos.Y - 11), Color.Red, 7);
             }
         }
 
         private void OnNetworkActivity(Entity sender, Int32PropertyChangeEventArgs args)
         {
-            if (this.Crit.Ability.Level <= 0)
+            if (this.ActivateRemnant.Ability.Level <= 0)
             {
                 return;
             }
@@ -210,12 +214,12 @@ namespace Vaper.Heroes
                 case NetworkActivity.Attack:
                 case NetworkActivity.Attack2:
                     // TODO: check for allies, buildings and wards target
-                    this.CurrentCritChance = Math.Min(1.0f, this.CurrentCritChance + this.CritPrd);
+                    this.CurrentCountdown = 0;
                     break;
 
-                case NetworkActivity.Crit:
+                case NetworkActivity.ActivateFireRemnant:
                     // Pseudo-random_distribution
-                    this.CurrentCritChance = this.CritPrd;
+                    this.CurrentCountdown = this.CountPrd;
                     break;
             }
         }
