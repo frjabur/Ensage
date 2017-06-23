@@ -152,10 +152,72 @@ namespace Vaper.Heroes
         {
             if (!this.RemnantCountdown)
             {
-                this.Ensage.Particle.Remove("vaper_blurIndicator");
+                              this.Ensage.Particle.Remove("vaper_blurIndicator");
             }
         }
 
+        private void CritIndicatorPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (this.CritIndicator)
+            {
+                this.Ensage.Renderer.Draw += this.OnDraw;
+            }
+            else
+            {
+                this.Ensage.Renderer.Draw -= this.OnDraw;
+            }
+        }
+
+        private void OnDraw(object sender, EventArgs e)
+        {
+            if (!this.CritIndicator || this.Crit.Ability.Level <= 0)
+            {
+                return;
+            }
+
+            Vector2 screenPos;
+            var barPos = this.Owner.Position + new Vector3(0, 0, this.Owner.HealthBarOffset);
+            if (Drawing.WorldToScreen(barPos, out screenPos))
+            {
+                this.Ensage.Renderer.DrawRectangle(new RectangleF(screenPos.X - 40, screenPos.Y - 15, 80, 7), Color.Red);
+
+                var critWidth = 80.0f * this.CurrentCritChance;
+                this.Ensage.Renderer.DrawLine(new Vector2(screenPos.X - 40, screenPos.Y - 11), new Vector2((screenPos.X - 40) + critWidth, screenPos.Y - 11), Color.Red, 7);
+            }
+        }
+
+        private void OnNetworkActivity(Entity sender, Int32PropertyChangeEventArgs args)
+        {
+            if (this.Crit.Ability.Level <= 0)
+            {
+                return;
+            }
+
+            if (sender != this.Owner)
+            {
+                return;
+            }
+
+            if (args.PropertyName != "m_NetworkActivity")
+            {
+                return;
+            }
+
+            var newNetworkActivity = (NetworkActivity)args.NewValue;
+
+            switch (newNetworkActivity)
+            {
+                case NetworkActivity.Attack:
+                case NetworkActivity.Attack2:
+                    // TODO: check for allies, buildings and wards target
+                    this.CurrentCritChance = Math.Min(1.0f, this.CurrentCritChance + this.CritPrd);
+                    break;
+
+                case NetworkActivity.Crit:
+                    // Pseudo-random_distribution
+                    this.CurrentCritChance = this.CritPrd;
+                    break;
+            }
+        }
     }
 }
-
