@@ -59,8 +59,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Heroes\Axe.cs" />
-    <Compile Include="Heroes\PhantomAssassin.cs" />
-    <Compile Include="OrbwalkingModes\PhantomAssassinOrbwalker.cs" />
+    <Compile Include="Heroes\EmberSpirit.cs" />
+    <Compile Include="OrbwalkingModes\EmberSpiritOrbwalker.cs" />
     <Compile Include="OrbwalkingModes\AxeComboOrbwalker.cs" />
     <Compile Include="BaseHero.cs" />
     <Compile Include="EnsageWorkUnit.cs" />
