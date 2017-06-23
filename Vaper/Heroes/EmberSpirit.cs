@@ -135,42 +135,7 @@ namespace Vaper.Heroes
             await Task.Delay(125, token);
         }
 
-        protected override void OnUpdateParticles()
-        {
-            if (this.RemnantCountdown)
-            {
-                if (!this.Owner.HasModifier(this.Remnant.ModifierName))
-                {
-                    this.Ensage.Particle.AddOrUpdate(this.Owner, "vaper_blurIndicator", @"particles/dire_fx/tower_bad_lamp_f.vpcf", ParticleAttachment.AbsOriginFollow);
-                }
-                else
-                {
-                    this.Ensage.Particle.Remove("vaper_blurIndicator");
-                }
-            }
 
-            base.OnUpdateParticles();
-        }
-
-        private void RemnantCountdownPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (!this.RemnantCountdown)
-            {
-                              this.Ensage.Particle.Remove("vaper_blurIndicator");
-            }
-        }
-
-        private void RemnantCountdownPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (this.RemnantCountdown)
-            {
-                this.Ensage.Renderer.Draw -= this.OnDraw;
-            }
-            else
-            {
-                this.Ensage.Renderer.Draw += this.OnDraw;
-            }
-        }
 
         private void OnDraw(object sender, EventArgs e)
         {
